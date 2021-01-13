@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    .container {
+      padding: 30px;
+    }
+  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="container">
+    <input type="number" placeholder="x" value="4">
+    <input type="number" placeholder="y" value="4">
+    <button onclick="renderTable()">render</button>
+    <table>
+      <tr></tr>
+    </table>
+    <label for="shift">Shift Value</label>
+    <input type="number" id="shift" value="1" min="1">
+    <div></div>
+    <button onclick="movingTop()">Atas</button>
+    <button onclick="movingBottom()">Bawah</button>
+    <button onclick="movingLeft()">Kiri</button>
+    <button onclick="movingRight()">Kanan</button>
+    <div>
+      <button onclick="swapTopBottom()">Swap Atas Bawah</button>
+      <button onclick="swapLeftRight()">Swap Kiri Kanan</button>
+    </div>
+  </div>
+</body>
+
+</html>
+<script>
+  const shift = document.getElementById('shift')
+
+  function renderTable() {
+    const input = document.getElementsByTagName('input')
+    console.log(parseInt(input[0].value))
+    console.log(parseInt(input[0].value))
+    console.log(input[1].value)
+    createArray(parseInt(input[0].value), parseInt(input[1].value))
+  }
+
+  let array = []
+
+  function createArray(x, y) {
+    array = []
+    for (var i = 0; i < x; i++) {
+      var array1 = []
+      if (i == 0) {
+        for (var j = i; j < y; j++) {
+          array1.push(j)
+        }
+        array.push(array1)
+      }
+      else {
+        for (var j = i * y; j < (y * i) + y; j++) {
+          array1.push(j)
+        }
+        array.push(array1)
+      }
+    }
+    console.log(array)
+    render(array)
+  }
+
+  function render(array) {
+    const table = document.getElementsByTagName('table')[0]
+    let template1 = ''
+    array.forEach(a => {
+      let template2 = ''
+      a.forEach(b => {
+        template2 += `<td>${b}</td>`
+      })
+      template1 += `<tr>${template2}</tr>`
+    })
+    table.innerHTML = template1
+  }
+
+  function movingTop(shiftValue = parseInt(shift.value)) {
+    let result = []
+    for (let i = shiftValue; i < array.length + shiftValue; i++) {
+      if (i >= array.length) {
+        result.push(array[i % array.length])
+        continue
+      }
+      result.push(array[i])
+    }
+    render(result)
+    array = result
+  }
+
+  function movingBottom(shiftValue = parseInt(shift.value)) {
+    let result = []
+    for (let i = 0, j = array.length - shiftValue; i < array.length;
+      i++, j = j < array.length - 1 ? j + 1 : j + 1 - array.length) {
+      result.push(array[j])
+    }
+    render(result)
+    array = result
+  }
+
+  function movingRight(shiftValue = parseInt(shift.value)) {
+    console.log(shiftValue)
+    let result = []
+    array.forEach(row => {
+      let test = []
+      for (let i = 0, j = row.length - shiftValue; i < row.length;
+        i++, j = j < row.length - 1 ? j + 1 : j + 1 - row.length) {
+        test.push(row[j])
+      }
+      result.push(test)
+    })
+    render(result)
+    array = result
+  }
+
+  function movingLeft(shiftValue = parseInt(shift.value)) {
+    let result = []
+    array.forEach(row => {
+      let test = []
+      for (let i = 0, j = shiftValue; i < row.length;
+        i++, j = j < row.length - 1 ? j + 1 : j + 1 - row.length) {
+        test.push(row[j])
+      }
+      result.push(test)
+    })
+    render(result)
+    array = result
+  }
+
+  function swapTopBottom() {
+    render(array.reverse())
+    array = array
+  }
+
+  function swapLeftRight() {
+    let result = []
+    array.forEach(row => {
+      result.push(row.reverse())
+    })
+    render(result)
+    array = result
+  }
+
+  createArray(9, 9)
+
+</script>
